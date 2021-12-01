@@ -4,6 +4,14 @@ const port = 4000
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
+//server.js
+//add just under import section at the top of server,js
+// Serve the static files from the React app
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../build')));
+app.use('/static', express.static(path.join(__dirname, 'build//static')));
+
+/*
 app.use(cors());
 app.use(function(req, res, next) {
 res.header("Access-Control-Allow-Origin", "*");
@@ -12,6 +20,10 @@ res.header("Access-Control-Allow-Headers",
 "Origin, X-Requested-With, Content-Type, Accept");
 next();
 });
+*/
+
+global.TextEncoder = require("util").TextEncoder; 
+global.TextDecoder = require("util").TextDecoder;
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -37,10 +49,6 @@ const movieSchema = new mongoose.Schema({
 
 const movieModel = mongoose.model('martindfgdfgdfg', movieSchema);
 
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
 
 app.post('/api/movies', (req,res)=>{
     console.log(req.body);
@@ -84,20 +92,19 @@ app.put('/api/movies/:id',(req, res)=>{
         (err,data)=>{
             res.send(data);
         })
-
 })
-
-
 
 app.get('/api/movies', (req, res) => {
     movieModel.find((err, data)=>{
         res.json(data);
     })
-          
-           // https://m.media-amazon.com/images/M/MV5BNDQ4YzFmNzktMmM5ZC00MDZjLTk1OTktNDE2ODE4YjM2MjJjXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg
-      
+    // https://m.media-amazon.com/images/M/MV5BNDQ4YzFmNzktMmM5ZC00MDZjLTk1OTktNDE2ODE4YjM2MjJjXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg
 })
 
+// Handles any requests that don't match the ones above
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/../build/index.html'));
+    });
 
 
 app.listen(port, () => {
