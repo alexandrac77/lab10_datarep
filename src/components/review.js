@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 
-class Edit extends Component {
-    constructor() {
-        super();
+
+class Review extends Component {
+    constructor(props) {
+        super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onChangeCafeName = this.onChangeCafeName.bind(this);
         this.onChangeCafeDesc = this.onChangeCafeDesc.bind(this);
@@ -16,23 +17,12 @@ class Edit extends Component {
         }
     }
 
-    componentDidMount(){
-        axios.get('http://localhost:4000/api/cafes/'+ this.props.match.params.id)
-        .then((response)=>{
-            this.setState({
-                Name:response.data.Name,
-                Desc:response.data.Desc,
-                Rating:response.data.Rating,
-                _id:response.data._id
-            })
-        })
-        .catch();
-    }
 
     handleSubmit(event) {
-        console.log("Name: " +this.state.Name+
-        " Desc: " + this.state.Desc +
-        "Rating: " + this.state.Rating);
+        console.log(
+            "Name: " + this.state.Name +
+            "Desc: " + this.state.Desc +
+            "Rating: " + this.state.Rating);
 
         const NewCafe = {
             Name: this.state.Name,
@@ -40,16 +30,19 @@ class Edit extends Component {
             Rating: this.state.Rating
         }
 
-        axios.put('http://localhost:4000/api/cafes/' + this.state._id, NewCafe)
-        .then((response)=>{console.log(response)})
-        .catch();
-        
+        axios.post('http://localhost:4000/api/cafes', NewCafe)
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
 
         event.preventDefault();
         this.setState({
-            Name:'',
-            Desc:'',
-            Rating:''
+            Name: '',
+            Desc: '',
+            Rating: ''
         });
     }
     onChangeCafeName(event) {
@@ -62,53 +55,63 @@ class Edit extends Component {
             Desc: event.target.value
         })
     }
-    onChangeCafeRating(event){
+    onChangeCafeRating(event) {
         this.setState({
             Rating: event.target.value
         })
     }
 
+
+
+
     render() {
         return (
+
             <div
             style={{
                 backgroundColor: 'Lavender', height:"90px" ,fontFamily:"Abril Fatface"}}>
-                <h1>Edit Review</h1>
-                <p>Make changes to your review below & press submit when finished to save.</p>
+                <h1>Write a Review</h1>
+                <h5>detail your experience(s) at the top vegan cafes / retaurants in Galway.</h5>
                 <br/><br/>
                 <form onSubmit={this.handleSubmit}>
-                    
-                    <div className="form-group" style={{color:'red'}}>
-                        <h3>Edit Cafe Name: </h3>
+
+                    <div className="form-group">
+                        <h3>Restaurant Name</h3>
                         <input type="text"
                             className="form-control"
                             value={this.state.Name}
                             onChange={this.onChangeCafeName}
-                        />
+                            onChangeText = {(text)=> this.setState({Name:text})} />
                     </div>
-                    <div className="form-group" style={{color:'red'}}>
-                        <h3>Edit Description: </h3>
+
+                    <div>
+                        <h3>Description</h3>
                         <input type="text"
                             className="form-control"
                             value={this.state.Desc}
-                            onChange={this.onChangeCafeDesc}
-                        />
+                            onChange={this.onChangeCafeDesc}/>
                     </div>
-                    <div className="form-group" style={{color:'red'}}>
-                        <h3>Edit Rating: </h3>
-                        <textarea type="text"
+
+                    <div>
+                        <h3>Rating (out of 10)</h3>
+                        <input type="text"
                             className="form-control"
                             value={this.state.Rating}
-                            onChange={this.onChangeCafeRating}
-                        />
+                            onChange={this.onChangeCafeRating}/>
                     </div>
+
                     <div>
-                        <input type="submit" value="Submit"
+                        <input 
+                        type="submit" value="Submit Review"
                             className="btn btn-danger"></input>
                     </div>
                 </form>
             </div>
         );
-    }
+
+
+    };
+
 }
-export default Edit;
+
+export default Review;

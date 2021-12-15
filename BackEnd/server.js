@@ -11,7 +11,7 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, '../build')));
 app.use('/static', express.static(path.join(__dirname, 'build//static')));
 
-/*
+
 app.use(cors());
 app.use(function(req, res, next) {
 res.header("Access-Control-Allow-Origin", "*");
@@ -20,7 +20,7 @@ res.header("Access-Control-Allow-Headers",
 "Origin, X-Requested-With, Content-Type, Accept");
 next();
 });
-*/
+
 
 global.TextEncoder = require("util").TextEncoder; 
 global.TextDecoder = require("util").TextDecoder;
@@ -33,7 +33,7 @@ app.use(bodyParser.json())
 
 const mongoose = require('mongoose');
 
-const strConnection = 'mongodb+srv://admin:admin@cluster0.8taek.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const strConnection = 'mongodb+srv://alex:unicorn@cluster1.d0lxv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 main().catch(err => console.log(err));
 
@@ -41,41 +41,41 @@ async function main() {
   await mongoose.connect(strConnection);
 }
 
-const movieSchema = new mongoose.Schema({
-    Title:String,
-    Year:String,
-    Poster:String
+const veganSchema = new mongoose.Schema({
+    Name:String,
+    Desc:String,
+    Rating:String
 });
 
-const movieModel = mongoose.model('martindfgdfgdfg', movieSchema);
+const cafeModel = mongoose.model('cows', veganSchema);
 
 
-app.post('/api/movies', (req,res)=>{
+app.post('/api/cafes', (req,res)=>{
     console.log(req.body);
-    console.log(req.body.Title);
-    console.log(req.body.Year);
-    console.log(req.body.Poster);
+    console.log(req.body.Name);
+    console.log(req.body.Desc);
+    console.log(req.body.Rating);
 
-    movieModel.create({
-        Title:req.body.Title,
-        Year:req.body.Year,
-        Poster:req.body.Poster
+    cafeModel.create({
+        Name:req.body.Name,
+        Desc:req.body.Desc,
+        Rating:req.body.Rating
     });
     res.send('Data Sent to Server!')
 })
 
-app.get('/api/movies/:id',(req, res)=>{
+app.get('/api/cafes/:id',(req, res)=>{
     console.log(req.params.id);
 
-    movieModel.findById(req.params.id,(error,data)=>{
+    cafeModel.findById(req.params.id,(error,data)=>{
         res.json(data);
     })
 })
 
-app.delete('/api/movies/:id', (req, res)=>{
-    console.log('Deleteing : '+req.params.id);
+app.delete('/api/cafes/:id', (req, res)=>{
+    console.log('Deleting : '+req.params.id);
 
-    movieModel.deleteOne({_id:req.params.id},
+    cafeModel.deleteOne({_id:req.params.id},
         (error, data)=>{
             if(error)
                 res.send(error)
@@ -83,22 +83,22 @@ app.delete('/api/movies/:id', (req, res)=>{
         })
 })
 
-app.put('/api/movies/:id',(req, res)=>{
+app.put('/api/cafes/:id',(req, res)=>{
     console.log('update');
     console.log(req.body);
     console.log("Updating: " + req.params.id);
 
-    movieModel.findByIdAndUpdate(req.params.id, req.body, {new:true},
+    cafeModel.findByIdAndUpdate(req.params.id, req.body, {new:true},
         (err,data)=>{
             res.send(data);
         })
 })
 
-app.get('/api/movies', (req, res) => {
-    movieModel.find((err, data)=>{
+app.get('/api/cafes', (req, res) => {
+    cafeModel.find((err, data)=>{
         res.json(data);
     })
-    // https://m.media-amazon.com/images/M/MV5BNDQ4YzFmNzktMmM5ZC00MDZjLTk1OTktNDE2ODE4YjM2MjJjXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg
+    
 })
 
 // Handles any requests that don't match the ones above
